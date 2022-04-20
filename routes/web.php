@@ -24,7 +24,6 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home'); //named route
 Route::get('/success', [SiteController::class, 'success'])->name('success');
 
-
 Route::middleware(['auth'])->group(function (){
     Route::get('/posts', [PostsController::class, 'index'])->name('post.all');
     Route::get('/posts/create', [PostsController::class, 'create'])->name('post.create');

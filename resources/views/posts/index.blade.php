@@ -1,5 +1,17 @@
 @extends('layouts.main')
 
 @section('content')
-    <p>My Posts</p>
+<div class="container">
+    <div class="row justify-content-left">
+        <div class="col-md-12">
+            <div class="card">
+                <h3 class="card-header">{{ __('All Posts') }}</h3>
+
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
