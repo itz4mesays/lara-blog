@@ -28,6 +28,8 @@
 
     <!-- Navbar -->
     @include('inc._navbar')
+
+    @include('inc._alert')
         
     @yield('content') <!-- Main content -->
 

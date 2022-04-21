@@ -27,4 +27,5 @@ Route::get('/success', [SiteController::class, 'success'])->name('success');
 Route::middleware(['auth'])->group(function (){
     Route::get('/posts', [PostsController::class, 'index'])->name('post.all');
     Route::get('/posts/create', [PostsController::class, 'create'])->name('post.create');
+    Route::post('/posts/store', [PostsController::class, 'store'])->name('post.store');
 });
