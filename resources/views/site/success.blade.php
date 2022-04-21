@@ -8,8 +8,12 @@
                 <h4 class="card-header">{{ __('Notification') }}</h4>
 
                 <div class="card-body">
+                    @if (Auth::guest())
+                        {{ __('Your registration is successful. Please proceed to ') }} <a href="{{ url('/login') }}">login</a>
+                    @else
+                    {{ __('Go back home. Click ') }} <a href="{{ url('/') }}">here</a>
+                    @endif
                     
-                    {{ __('Your registration is successful. Please proceed to ') }} <a href="{{ url('/login') }}">login</a>
                 </div>
             </div>
         </div>
