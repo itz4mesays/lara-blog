@@ -9,10 +9,14 @@
         "prod": "npm run production",
         "production": "mix --production",
         "makeController": "php artisan make:controller nameController",
-        "makeModel": "php artisan make:model PostName -m",
+        "makeModelandMigration": "php artisan make:model PostName -m",
         "makeControl": "php artisan make:controller nameController --resource",
         "makeAuthentication": "php artisan make:auth",
-        "installHtmlCollective": "composer require laravelcollective/html"
+        "installHtmlCollective": "composer require laravelcollective/html",
+        "makeMigration": "php artisan make:migration create_users_table",
+        "makeFormRequest": "php artisan make:request StorePostRequest",
+        "installLaravelCKEditor": "composer require unisharp/laravel-ckeditor",
+        "linkStorageToPublic": "php artisan storage:link"
     },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",

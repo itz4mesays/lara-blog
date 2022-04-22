@@ -17,10 +17,10 @@
 
                 <li class="nav-item">
                     <a class="nav-link" href="#" title="List of all available post">
-                        Posts
+                        Blog
                     </a>
                 </li>
-                
+
                 @if (Auth::guest())
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/register') }}">Register</a>
@@ -50,10 +50,10 @@
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf
                     </form>
-                    
+
                 @endif
             </ul>
-            
+
         </div>
     </div>
 </nav>

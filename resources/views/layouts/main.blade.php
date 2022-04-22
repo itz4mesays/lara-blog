@@ -14,8 +14,8 @@
 
     <link rel="icon" href="{{ asset('img/brand/favicon.png') }}" type="image/png"><!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('libs/@fortawesome/fontawesome-free/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('/css/quick-website.css') }} " id="stylesheet">
-    <link rel="stylesheet" href="{{ asset('/css/custom.css') }} " id="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/quick-website.css') }} " id="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }} " id="stylesheet">
 </head>
 
 <body>
@@ -30,7 +30,7 @@
     @include('inc._navbar')
 
     @include('inc._alert')
-        
+
     @yield('content') <!-- Main content -->
 
     {{-- @include('inc._footer') --}}

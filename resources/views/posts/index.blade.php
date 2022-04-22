@@ -10,6 +10,8 @@
                 <div class="card-body">
 
                     <div class="table-responsive">
+
+                        @if (count($posts) > 0)
                         <table class="table">
                             <thead>
                               <tr>
@@ -22,53 +24,59 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>Status</td>
-                                <td>Date</td>
-                                <td>
-                                    <div class="btn-group dropright">
-                                        <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Actions
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Separated link</a>
-                                        </div>
-                                    </div>
-                                </td>
-                              </tr>
-
-                              <tr>
-                                <th scope="row">2</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>Status</td>
-                                <td>Date</td>
-                                <td>
-                                    <div class="btn-group dropright">
-                                        <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Actions
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Separated link</a>
-                                        </div>
-                                    </div>
-                                </td>
-                              </tr>
+                                @php
+                                    $i = 1
+                                @endphp
+                                @foreach ($posts as $post)
+                                    <tr>
+                                        <th scope="row"> {{ $i }}</th>
+                                        <td>
+                                            @if ($post->user_id == auth()->user()->id)
+                                              <span class="badge badge-success">self</span>
+                                            @else
+                                                {{ $post->user->name }}
+                                            @endif
+                                        </td>
+                                        <td>{{ $post->post_title }}</td>
+                                        <td>Status</td>
+                                        <td>{{ date('F, d Y', strtotime($post->created_at)) }}</td>
+                                        <td>
+                                            <div class="btn-group dropright">
+                                                <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Actions
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="{{ route('post.view', $post->id) }}">{{ __('View') }}</a>
+                                                    <a class="dropdown-item" href="#">{{ __('Delete') }}</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
                             </tbody>
                           </table>
+
+
+                        @else
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <p>
+                                    <strong>Heads up!</strong> You have not created any post(s) at the moment.
+                                Please click <a href="{{ route('post.create') }}">here</a> to create new post.</p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
+
                     </div>
-                    
+
+                    <div class="col-sm-12">
+                        {{ $posts->links() }}
+                      </div>
+
 
                 </div>
             </div>

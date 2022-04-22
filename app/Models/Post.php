@@ -13,11 +13,18 @@ class Post extends Model
 
     protected $fillable = [
         'post_title',
-        'body'
+        'body',
+        'file_name'
     ];
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
+
+    // public function save(array $options = array())
+    // {
+    //     $this->owner = auth()->user()->id;
+    //     parent::save($options);
+    // }
 
 }
