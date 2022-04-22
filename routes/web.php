@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [SiteController::class, 'index']);
 Route::get('/login', [SiteController::class, 'login']);
+Route::get('/blog', [SiteController::class, 'blog']);
 
 Auth::routes();
 
@@ -28,6 +29,6 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/posts', [PostsController::class, 'index'])->name('post.all');
     Route::get('/posts/create', [PostsController::class, 'create'])->name('post.create');
     Route::post('/posts/store', [PostsController::class, 'store'])->name('post.store');
-    Route::get('/posts/view/{$id}', [PostsController::class, 'view'])->name('post.view');
-    Route::get('/posts/delete/{$id}', [PostsController::class, 'delete'])->name('post.delete');
+    Route::get('/posts/view/{id}', [PostsController::class, 'view'])->name('post.view');
+    Route::get('/posts/delete/{id}', [PostsController::class, 'delete'])->name('post.delete');
 });

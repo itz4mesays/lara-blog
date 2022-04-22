@@ -15,7 +15,7 @@ class PostsController extends Controller
         $posts = Post::select('id','post_title', 'body', 'created_at', 'user_id')
                     ->where('user_id', auth()->user()->id)
                     ->orderBy('created_at', 'desc')
-                    ->paginate(2);
+                    ->cursorPaginate(10);
         return view('posts.index')->with('posts', $posts);
     }
 
@@ -50,7 +50,8 @@ class PostsController extends Controller
     }
 
     public function view($id){
-
+        $post = Post::where(['id' => $id, 'user_id' => auth()->user()->id])->firstOrFail();
+        return view('posts.view')->with('post',$post);
     }
 
     public function delete($id){

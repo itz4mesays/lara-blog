@@ -38,7 +38,13 @@
                                             @endif
                                         </td>
                                         <td>{{ $post->post_title }}</td>
-                                        <td>Status</td>
+                                        <td>
+                                            @if ($post->status == 0)
+                                                <span class="badge badge-secondary">Active</span>
+                                            @else
+                                                <span class="badge badge-danger">Inactive</span>
+                                            @endif
+                                        </td>
                                         <td>{{ date('F, d Y', strtotime($post->created_at)) }}</td>
                                         <td>
                                             <div class="btn-group dropright">
@@ -46,8 +52,8 @@
                                                     Actions
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="{{ route('post.view', $post->id) }}">{{ __('View') }}</a>
-                                                    <a class="dropdown-item" href="#">{{ __('Delete') }}</a>
+                                                    <a class="dropdown-item" href="{{ route('post.view', $post->id) }}"><i data-feather="arrow-right-circle"></i> {{ __('View') }}</a>
+                                                    <a class="dropdown-item" href="#"> <i data-feather="trash-2"></i> {{ __('Delete') }}</a>
                                                 </div>
                                             </div>
                                         </td>

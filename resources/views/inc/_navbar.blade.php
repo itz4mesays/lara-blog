@@ -16,7 +16,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#" title="List of all available post">
+                    <a class="nav-link" href="{{ url('/blog') }}" title="List of all available post">
                         Blog
                     </a>
                 </li>

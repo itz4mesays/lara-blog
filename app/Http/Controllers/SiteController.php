@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,5 +24,10 @@ class SiteController extends Controller
 
     public function success(){
         return view('site.success');
+    }
+
+    public function blog(){
+        $posts = Post::where('status', 0)->orderBy('created_at', 'desc')->cursorPaginate(5);
+        return view('site.blog')->with('posts', $posts);
     }
 }
