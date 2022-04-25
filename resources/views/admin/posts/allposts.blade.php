@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
-@section('title', 'My Posts')
+@section('title', 'All Posts')
+
 @section('content')
 <div class="container">
     <div class="row justify-content-left">

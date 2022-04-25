@@ -3,7 +3,7 @@
 
 <head>
     @include('inc._metatags')
-    <title> {{ config('app.name') }} </title>
+    <title> {{ config('app.name') }} - @yield('title') </title>
     <script>
         window.addEventListener("load", function() {
             setTimeout(function() {

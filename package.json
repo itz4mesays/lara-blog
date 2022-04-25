@@ -16,7 +16,10 @@
         "makeMigration": "php artisan make:migration create_users_table",
         "makeFormRequest": "php artisan make:request StorePostRequest",
         "installLaravelCKEditor": "composer require unisharp/laravel-ckeditor",
-        "linkStorageToPublic": "php artisan storage:link"
+        "linkStorageToPublic": "php artisan storage:link",
+        "makePolicyWithPost": "php artisan make:policy PostPolicy --model=Post",
+        "makeSeeder": "php artisan make:seeder UserSeeder",
+        "runSeeder": "php artisan db:seed --class=UserSeeder"
     },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",

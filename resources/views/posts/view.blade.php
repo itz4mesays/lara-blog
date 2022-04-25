@@ -23,7 +23,7 @@
                             
                         </div>
                         <div class="pl-4">
-                            <h5>{{ $post->post_title }} </h5>
+                            {{-- <h5>{{ $post->post_title }} </h5> --}}
                             <p>
                                 {{ $post->body }}
                             </p>

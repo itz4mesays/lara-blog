@@ -1,5 +1,6 @@
 @extends('layouts.main')
 
+@section('title', 'All ')
 @section('content')
 
     <section class="slice py-7">
@@ -27,6 +28,13 @@
                                 <p>
                                     {!! $p->body !!}
                                 </p>
+
+                                <br/>
+
+                                <p class="text-bold"> <em> {{ __('Posted By: ')}}
+                                    <span class="badge badge-secondary badge-pill"> {{ $p->user->name }}</span>
+                                    </em> </p>
+                                <p class="text-bold"> <em>{{ __('Written on')}}: {{ date('F d, Y', strtotime($p->created_at)) }}</em> </p>
                             </div>
                         </div>
                         
