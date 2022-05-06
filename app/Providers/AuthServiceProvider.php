@@ -28,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('self-post', fn(User $user, Post $post) => $user->id === $post->user_id); //manage own posts
+        Gate::define('view-my-posts', fn(User $user) => $user->id === auth()->user()->id);
         Gate::define('admin_menus', fn(User $user) => $user->role_id === User::ADMIN);
     }
 }

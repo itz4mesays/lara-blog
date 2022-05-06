@@ -51,5 +51,6 @@ Route::middleware(['auth'])->group(function (){
         Route::get('/posts/edit/{id}', [PostsController::class, 'edit'])->name('post.edit');
         Route::put('/posts/update/{id}', [PostsController::class, 'update'])->name('post.update');
         Route::delete('/posts/delete/{id}', [PostsController::class, 'delete'])->name('post.delete');
+        Route::post('/posts/likes', [PostsController::class, 'likes'])->name('post.likes');
     });
 });

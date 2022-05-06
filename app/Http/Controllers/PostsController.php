@@ -4,19 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Services\PostService;
+use App\Models\Likes;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Validator;
 
 class PostsController extends Controller
 {
-    //
+    protected $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
 
     public function index(){
-        $posts = Post::select('id','post_title', 'body', 'created_at', 'user_id')
-                    ->where('user_id', auth()->user()->id)
-                    ->orderBy('created_at', 'desc')
-                    ->cursorPaginate(10);
+        $this->authorize('view-my-posts');
+        $posts = $this->postService->getAllPosts();
         return view('posts.index')->with('posts', $posts);
     }
 
@@ -28,79 +33,119 @@ class PostsController extends Controller
 
         $request->validated();
 
-        if($request->hasFile('file_name')){
-            $imageWithExtension = $request->file('file_name')->getClientOriginalName(); //Filename with extension
-            $yourFileName = pathinfo($imageWithExtension, PATHINFO_FILENAME); //extract only the filename without extension
-            $extension = $request->file('file_name')->getClientOriginalExtension();
-            $fileName = $yourFileName.'_'.time().'.'.$extension; //filename
-            $uploadPath = 'public/postUploads';
-            $path = $request->file('file_name')->storeAs($uploadPath, $fileName);
-        }else{
-            $fileName = '';
-        }
+        $this->postService->create($request);
 
-        $post = new Post();
-        $post->post_title = $request->input('post_title');
-        $post->body = $request->input('body');
-        $post->user_id = auth()->user()->id;
-        $post->file_name = $fileName;
-        $post->save();
-
-        return redirect()->route('post.all')->with('success', 'Your post has been successfully created!!!');
+        return redirect()->route('user.post.all')->with('success', 'Your post has been successfully created!!!');
 
     }
 
     public function view(Post $post, $id){
-        $post = Post::where('id', $id)->firstOrFail();
+
+        $post = $this->postService->getSinglePost($id);
         $this->authorize('self-post', $post); 
 
         return view('posts.view')->with('post',$post);
     }
 
     public function edit(Post $post, $id){
-        $post = Post::where('id', $id)->firstOrFail();
+        $post = $this->postService->getSinglePost($id);
+
         $this->authorize('self-post', $post);    
         return view('posts.edit')->with('post',$post);
     }
 
     public function update(Request $request, $id){
+
         $this->validate($request, [
             'post_title' => 'required|string:65',
             'body' => 'required',
             'file_name' => 'image|nullable|max:1999'
         ]);
 
+        $this->authorize('self-post', $this->postService->getSinglePost($id));
+        
+        $this->postService->updatePost($request, $id);
 
-        if($request->hasFile('file_name')  ){
-            $imageWithExtension = $request->file('file_name')->getClientOriginalName(); //Filename with extension
-            $yourFileName = pathinfo($imageWithExtension, PATHINFO_FILENAME); //extract only the filename without extension
-            $extension = $request->file('file_name')->getClientOriginalExtension();
-            $fileName = $yourFileName.'_'.time().'.'.$extension; //filename
-            $uploadPath = 'public/postUploads';
-            $path = $request->file('file_name')->storeAs($uploadPath, $fileName);
-        }
-
-        $post = Post::where('id', $id)->firstOrFail();
-        $this->authorize('self-post', $post); 
-
-        $oldImage = $post->file_name;
-
-        $post->post_title = $request->input('post_title');
-        $post->body = $request->input('body');
-        $post->user_id = auth()->user()->id;
-        $post->file_name = $fileName ?? $oldImage;
-        $post->save();
-
-        return redirect()->route('post.view', $id)->with('success', 'Your post has been successfully updated!!!');
+        return redirect()->route('user.post.view', $id)->with('success', 'Your post has been successfully updated!!!');
     }
 
     public function delete($id){
         
-        $post = Post::where('id', $id)->firstOrFail();
+        $post = $this->postService->getSinglePost($id);
         $this->authorize('self-post', $post); 
 
         $post->delete();
-        return redirect()->route('post.all')->with('success', 'Post has been deleted!!!');
+        return redirect()->route('user.post.all')->with('success', 'Post has been deleted!!!');
+    }
+
+    public function likes(Request $request){
+
+        $response = [];
+
+        $rules= [
+            'post_id'  =>"required|integer",
+            'type' =>"required|string",
+            'countNum' =>"required|integer",
+        ];
+
+        $validator= Validator::make($request->all(),$rules);
+        
+        if($validator->fails())
+        {
+            $response['status'] = 400;
+            $response['data'] = $validator->errors();
+            // return $response;
+        }else{
+            //Get a single Like Record for a post
+            $postLike = Likes::where(['user_id' => auth()->user()->id, 'post_id' => $request->post_id])->first();
+
+            if(!$postLike){
+                try {
+                    $newPost = new Likes();
+                    $newPost->post_id = $request->post_id;
+                    $newPost->likes = $request->type == 'like' ? $request->countNum : 0;
+                    $newPost->unlikes = $request->type == 'unlike' ? $request->countNum : 0;
+                    $newPost->save();
+
+                    $response['status'] = 201;
+                    $response['data'] = 'You have successfully '. $request->type.'d this post';
+
+                } catch (\Throwable $th) {
+                    $response['status'] = 500;
+                    $response['data'] = $th->__toString();
+                }  
+            }else{
+                try {
+                    if($postLike->likes > 0 && $request->type == 'like' && $postLike->post_id == $request->post_id){
+                        $response['status'] = 422;
+                        $response['data'] = 'You have already liked this post before';
+                    }elseif($postLike->unlikes > 0 && $request->type == 'unlike' && $postLike->post_id == $request->post_id){
+                        $response['status'] = 422;
+                        $response['data'] = 'You have already unliked this post before';
+                    }elseif(($postLike->likes == 0 || $postLike->likes == null) && $request->type == 'like' && $request->countNum > 0){
+                        $postLike->likes = $request->countNum;
+                        $postLike->save();
+
+                        $response['status'] = 201;
+                        $response['data'] = 'You have successfully '. $request->type.'d this post';
+                    }else{
+                        $postLike->unlikes = $request->countNum;
+                        $postLike->save();
+
+                        $response['status'] = 201;
+                        $response['data'] = 'You have successfully '. $request->type.'d this post';
+                    }
+    
+                } catch (\Throwable $th) {
+                    $response['status'] = 500;
+                    $response['data'] = $th->__toString();
+                    
+                }
+                
+            }
+        }
+
+        return response()->json($response);
     }
 
     protected function getSinglePost($id){

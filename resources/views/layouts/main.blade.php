@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="{{ asset('libs/@fortawesome/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/quick-website.css') }} " id="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }} " id="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 </head>
 
 <body>
@@ -38,16 +40,20 @@
     <!-- Core JS  -->
     <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="{{ asset('libs/svg-injector/dist/svg-injector.min.js') }}"></script>
     <script src="{{ asset('libs/feather-icons/dist/feather.min.js') }}"></script>
     <!-- Quick JS -->
     <script src="{{ asset('js/quick-website.js') }}"></script>
+    <script src="{{asset('js/custom.js')}}"></script>
+
     <!-- Feather Icons -->
     <script>
         feather.replace({
             'width': '1em',
             'height': '1em'
         })
+
     </script>
 </body>
 
