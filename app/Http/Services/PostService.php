@@ -3,6 +3,8 @@
 namespace App\Http\Services;
 
 use App\Http\Repositories\PostRepository;
+use App\Models\Comments;
+use App\Models\Likes;
 use App\Models\Post;
 
 class PostService implements PostRepository 
@@ -42,8 +44,7 @@ class PostService implements PostRepository
 	}
 
 	public function updatePost(object $request, int $id)
-	{
-		
+	{		
 		$post = $this->getSinglePost($id);
 
 		if($request->hasFile('file_name')  ){
@@ -63,4 +64,40 @@ class PostService implements PostRepository
         $post->file_name = $fileName ?? $oldImage;
         $post->save();
 	}
+
+    public function likePost(object $request)
+    {
+        $newLike = new Likes();
+        $newLike->post_id = $request->post_id;
+        $newLike->likes = $request->type == 'like' ? $request->countNum : 0;
+        $newLike->unlikes = $request->type == 'unlike' ? $request->countNum : 0;
+        return $newLike->save();
+    }
+
+    public function addComment(object $request): array
+    {
+        try {
+            //code...
+            $comment = new Comments();
+            $comment->post_id = $request->pid;
+            $comment->message = $request->message;
+            $comment->save();
+
+            return [
+                'code' => 201,
+                'id' => $comment->id,
+                'username' => $comment->author->name,
+                'date_created' => date('d F, Y', strtotime($comment->created_at)),
+                'message' => $request->message,
+                'msg' => 'Comment has been added successfully'
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            return [
+                'code' => 500,
+                'message' => $th->__toString()
+            ];
+        }
+        
+    }
 }

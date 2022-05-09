@@ -42,7 +42,7 @@ class PostsController extends Controller
     public function view(Post $post, $id){
 
         $post = $this->postService->getSinglePost($id);
-        $this->authorize('self-post', $post); 
+        $this->authorize('self-post', $post);
 
         return view('posts.view')->with('post',$post);
     }
@@ -50,7 +50,7 @@ class PostsController extends Controller
     public function edit(Post $post, $id){
         $post = $this->postService->getSinglePost($id);
 
-        $this->authorize('self-post', $post);    
+        $this->authorize('self-post', $post);
         return view('posts.edit')->with('post',$post);
     }
 
@@ -63,16 +63,16 @@ class PostsController extends Controller
         ]);
 
         $this->authorize('self-post', $this->postService->getSinglePost($id));
-        
+
         $this->postService->updatePost($request, $id);
 
         return redirect()->route('user.post.view', $id)->with('success', 'Your post has been successfully updated!!!');
     }
 
     public function delete($id){
-        
+
         $post = $this->postService->getSinglePost($id);
-        $this->authorize('self-post', $post); 
+        $this->authorize('self-post', $post);
 
         $post->delete();
         return redirect()->route('user.post.all')->with('success', 'Post has been deleted!!!');
@@ -89,23 +89,19 @@ class PostsController extends Controller
         ];
 
         $validator= Validator::make($request->all(),$rules);
-        
+
         if($validator->fails())
         {
             $response['status'] = 400;
             $response['data'] = $validator->errors();
-            // return $response;
         }else{
             //Get a single Like Record for a post
             $postLike = Likes::where(['user_id' => auth()->user()->id, 'post_id' => $request->post_id])->first();
 
             if(!$postLike){
                 try {
-                    $newPost = new Likes();
-                    $newPost->post_id = $request->post_id;
-                    $newPost->likes = $request->type == 'like' ? $request->countNum : 0;
-                    $newPost->unlikes = $request->type == 'unlike' ? $request->countNum : 0;
-                    $newPost->save();
+
+                    $this->postService->likePost($request);
 
                     $response['status'] = 201;
                     $response['data'] = 'You have successfully '. $request->type.'d this post';
@@ -113,7 +109,7 @@ class PostsController extends Controller
                 } catch (\Throwable $th) {
                     $response['status'] = 500;
                     $response['data'] = $th->__toString();
-                }  
+                }
             }else{
                 try {
                     if($postLike->likes > 0 && $request->type == 'like' && $postLike->post_id == $request->post_id){
@@ -135,17 +131,34 @@ class PostsController extends Controller
                         $response['status'] = 201;
                         $response['data'] = 'You have successfully '. $request->type.'d this post';
                     }
-    
+
                 } catch (\Throwable $th) {
                     $response['status'] = 500;
                     $response['data'] = $th->__toString();
-                    
                 }
-                
+
             }
         }
 
         return response()->json($response);
+    }
+
+    /**
+     * Add Comment to a single post
+     * return json
+     */
+    public function addComment(Request $request){
+        $result = $this->postService->addComment($request);
+        return response()->json($result);
+    }
+
+    /**
+     * Add Sub Comment Under a Comment
+     * @param Request $request
+     * @return void
+     */
+    public function addChildComment(Request $request){
+
     }
 
     protected function getSinglePost($id){

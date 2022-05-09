@@ -15,7 +15,7 @@
                         </div>
 
                         <div class="d-flex p-5">
-                            
+
                             <div>
                                 @if ($p->status == 0)
                                     <span class="badge badge-success">Active</span>
@@ -35,9 +35,26 @@
                                     <span class="badge badge-secondary badge-pill"> {{ $p->user->name }}</span>
                                     </em> </p>
                                 <p class="text-bold"> <em>{{ __('Written on')}}: {{ date('F d, Y', strtotime($p->created_at)) }}</em> </p>
+
+                                <div class="pad-ver">
+                                    <div class="btn-group">
+                                        <p class="btn btn-sm btn-default btn-hover-success duid" data-uid="{{'like_'.$p->id}}">
+                                            <span class="badge badge-secondary"> {{$p->lcount ? $p->lcount->likes : 0}}  </span> <i class="fa fa-thumbs-up"></i>
+                                        </p>
+
+                                        <p class="btn btn-sm btn-default btn-hover-danger duid" data-uid="{{'unlike_'.$p->id}}">
+                                            <span class="badge badge-info"> {{$p->lcount ? $p->lcount->unlikes : 0}} </span> <i class="fa fa-thumbs-down"></i>
+                                        </p>
+
+                                        <p class="btn btn-sm btn-default btn-hover-danger commentCount" data-comm="{{$p->id}}">
+                                            <span class="badge badge-secondary"> {{$p->comments ? count($p->comments) : 0}}  </span> <i class="fa fa-comment" title="Comments"></i>
+                                        </p>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                        
+
                     </div>
                 @endforeach
 

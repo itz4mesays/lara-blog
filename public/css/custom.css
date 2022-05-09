@@ -153,3 +153,15 @@ body.loaded>div.preloader {
 .mar-top {
     margin-top: 15px;
 }
+.commentSection, .replyForm {display:none}
+
+#id_message{
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+}
+
+.divider{margin:8px}
+.addReply{
+    cursor: pointer ;
+}

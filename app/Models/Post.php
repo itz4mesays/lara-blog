@@ -25,20 +25,9 @@ class Post extends Model
         return $this->hasOne(Likes::class, 'post_id');
     }
 
-    public static function boot(){
-        parent::boot();
-
-        // self::creating(function($model){
-        //     // ... code here
-        // });
-
-        // self::creating(fn($model) => $model->user_id == auth()->user()->id);
-    }
-
-    public function save(array $options = array())
-    {
-        $this->user_id = auth()->user()->id;
-        parent::save($options);
+    public function comments(){
+        // return $this->hasMany(Comments::class, 'post_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(Comments::class, 'post_id');
     }
 
 }

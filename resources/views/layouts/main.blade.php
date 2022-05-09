@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="{{ asset('css/quick-website.css') }} " id="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }} " id="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-
 </head>
 
 <body>
@@ -41,6 +40,7 @@
     <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
     <script src="{{ asset('libs/svg-injector/dist/svg-injector.min.js') }}"></script>
     <script src="{{ asset('libs/feather-icons/dist/feather.min.js') }}"></script>
     <!-- Quick JS -->

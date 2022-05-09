@@ -36,7 +36,7 @@ Route::middleware(['auth'])->group(function (){
     ], function(){
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/posts', [AdminPostsController::class, 'index'])->name('posts');
-        
+
     });
 
     //Posts Route for Publisher
@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function (){
         'prefix' => 'user',
         'as' => 'user.'
     ], function(){
+        //Post Routes
         Route::get('/posts', [PostsController::class, 'index'])->name('post.all');
         Route::get('/posts/create', [PostsController::class, 'create'])->name('post.create');
         Route::post('/posts/store', [PostsController::class, 'store'])->name('post.store');
@@ -52,5 +53,9 @@ Route::middleware(['auth'])->group(function (){
         Route::put('/posts/update/{id}', [PostsController::class, 'update'])->name('post.update');
         Route::delete('/posts/delete/{id}', [PostsController::class, 'delete'])->name('post.delete');
         Route::post('/posts/likes', [PostsController::class, 'likes'])->name('post.likes');
+
+        //Comment Routes
+        Route::post('/posts/add-comment', [PostsController::class, 'addComment'])->name('post.comment');
+        Route::post('/post/{id}/comment/{id}/add-child-comment', [PostsController::class, 'addChildComment'])->name('post.add-comment');
     });
 });

@@ -12,4 +12,6 @@ interface PostRepository {
 
 	public function updatePost(object $request, int $id);
 
+	public function addComment(object $request);
+
 }
