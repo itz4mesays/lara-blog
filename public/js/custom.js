@@ -64,15 +64,15 @@ $('.duid').on('click', function(e){
             'type': splitUid[0],
             'countNum': currentCount
         }
-
-        
-
-        fetch(baseURL +'/user/posts/likes', {
+    
+        fetch(baseURL + '/user/posts/likes', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {'Content-Type': 'application/json','X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
         }).then(response => response.json())
         .then(response => {
+
+            // console.log(response)
             let responseCode = response.status
             if(responseCode === 400){
                 const res = Object.values(response.data)
@@ -98,7 +98,7 @@ $('.duid').on('click', function(e){
 
 $('.comment').on('click', function (e){
     e.preventDefault()
-    $("html, body").animate({ scrollTop: $(document).height() }, 1000)
+    // $("html, body").animate({ scrollTop: $(document).height() }, 1000)
     $('.commentSection').animate({opacity: "show"}, 500)
 })
 

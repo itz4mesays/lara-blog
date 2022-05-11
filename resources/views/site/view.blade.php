@@ -47,6 +47,10 @@
                                         <span class="badge badge-secondary"> {{$post->comments ? count($post->comments) : 0}}  </span> <i class="fa fa-comment" title="Comments"></i>
                                     </p>
                                 </div>
+                                @if (Auth::check())
+                                    <a href="#" class="comment">Add Comment</a>
+                                @endif
+                                
                             </div>
                         </div>
                     </div>
@@ -74,10 +78,9 @@
                 <!-- End Comment -->
 
                 <br/>
-
-                @include('posts._partials._comments', [$post])
             @endif
             
+            @include('posts._partials._comments', [$post])
 
         </div>
     </div>

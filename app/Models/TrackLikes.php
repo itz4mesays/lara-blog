@@ -5,14 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Likes extends Model
+class TrackLikes extends Model
 {
     use HasFactory;
 
+    protected $table = 'track_likes';
+    public $timestamps = false;
+
     protected $fillable = [
-        'likes',
-        'unlikes',
-        'sub_comment_id'
+        'type'
     ];
 
     public static function boot(){
@@ -23,8 +24,4 @@ class Likes extends Model
         });
     }
 
-
-    public function post(){
-        return $this->belongsTo(User::class);
-    }
 }

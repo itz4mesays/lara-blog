@@ -16,4 +16,6 @@ interface PostRepository {
 
 	public function addSubComment(object $request);
 
+	public function getSingleLike(int $post_id);
+
 }

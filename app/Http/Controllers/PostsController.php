@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Services\PostService;
 use App\Models\Likes;
+use App\Models\TrackLikes;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Validator;
 
@@ -81,7 +82,7 @@ class PostsController extends Controller
         return redirect()->route('user.post.all')->with('success', 'Post has been deleted!!!');
     }
 
-    public function likes(Request $request){
+    public function likePost(Request $request){
 
         $response = [];
 
@@ -99,40 +100,58 @@ class PostsController extends Controller
             $response['data'] = $validator->errors();
         }else{
             //Get a single Like Record for a post
-            $postLike = Likes::where(['user_id' => auth()->user()->id, 'post_id' => $request->post_id])->first();
+            $post = $this->postService->getSingleLike($request->post_id);
+                     
+            $type = $request->type == 'like' ? 'like' : 'unlike';    
 
-            if(!$postLike){
+            if(!$post){
                 try {
+                    \DB::beginTransaction();
 
-                    $this->postService->likePost($request);
+                    $this->postService->likePost($request); //save into likes table
 
+                    $track_likes = new TrackLikes();
+                    $track_likes->post_id = $request->post_id;
+                    $track_likes->type = $type;
+                    $track_likes->save();
+                 
+                    \DB::commit();
+                    
                     $response['status'] = 201;
                     $response['data'] = 'You have successfully '. $request->type.'d this post';
-
                 } catch (\Throwable $th) {
+                    \DB::rollback();
                     $response['status'] = 500;
                     $response['data'] = $th->__toString();
                 }
             }else{
+                //Check the track_likes table if user has liked or unliked this post before
+                $postLike = TrackLikes::where(['user_id' => auth()->user()->id, 'post_id' => $request->post_id, 'type' => $type])->first();
                 try {
-                    if($postLike->likes > 0 && $request->type == 'like' && $postLike->post_id == $request->post_id){
+                    if($postLike){
+                        $liketype = $postLike == 'like' ? 'liked' : 'unliked';
                         $response['status'] = 422;
-                        $response['data'] = 'You have already liked this post before';
-                    }elseif($postLike->unlikes > 0 && $request->type == 'unlike' && $postLike->post_id == $request->post_id){
-                        $response['status'] = 422;
-                        $response['data'] = 'You have already unliked this post before';
-                    }elseif(($postLike->likes == 0 || $postLike->likes == null) && $request->type == 'like' && $request->countNum > 0){
-                        $postLike->likes = $request->countNum;
-                        $postLike->save();
-
-                        $response['status'] = 201;
-                        $response['data'] = 'You have successfully '. $request->type.'d this post';
+                        $response['data'] = 'You have already '.$liketype.' this post before';
                     }else{
-                        $postLike->unlikes = $request->countNum;
-                        $postLike->save();
+                        try {
+                            \DB::beginTransaction();
 
-                        $response['status'] = 201;
-                        $response['data'] = 'You have successfully '. $request->type.'d this post';
+                            $post->likes = ($request->type == 'like') ? $request->countNum : $post->likes;
+                            $post->unlikes = ($request->type == 'unlike') ? $request->countNum : $post->unlikes;
+                            $post->save();
+
+                            \DB::commit();
+
+                            $response['status'] = 201;
+                            $response['data'] = 'You have successfully '. $request->type.'d this post';
+                        } catch (\Throwable $th) {
+                            //throw $th;
+                            \DB::rollback();
+                            $response['status'] = 500;
+                            $response['data'] = $th->__toString();
+                        }
+
+
                     }
 
                 } catch (\Throwable $th) {
@@ -166,6 +185,6 @@ class PostsController extends Controller
     }
 
     protected function getSinglePost($id){
-        return Post::where(['id' => $id, 'user_id' => auth()->user()->id])->firstOrFail();
+        return Post::where(['id' => $id, 'user_id' => auth()->user()->id])->first();
     }
 }

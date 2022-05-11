@@ -12,8 +12,12 @@ class PostService implements PostRepository
 {
 	public function getSinglePost(int $id)
 	{
-		return Post::where(['id' => $id])->firstOrFail();
+		return Post::where(['id' => $id])->first();
 	}
+
+    public function getSingleLike(int $post_id){
+        return Likes::where(['post_id' => $post_id, 'user_id' => auth()->user()->id])->first();
+    }
 
 	public function create(object $data)
 	{
@@ -70,6 +74,7 @@ class PostService implements PostRepository
     {
         $newLike = new Likes();
         $newLike->post_id = $request->post_id;
+        // $newLike->user_id = auth()->user()->id;
         $newLike->likes = $request->type == 'like' ? $request->countNum : 0;
         $newLike->unlikes = $request->type == 'unlike' ? $request->countNum : 0;
         return $newLike->save();

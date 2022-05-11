@@ -6,8 +6,8 @@ use App\Models\SubComments;
 
 class Utils {
     
-    public static function getSubComments($commentID){
-        return SubComments::where(['parent_comment_id' => $commentID, 'user_id' => auth()->user()->id])->get();
+    public static function getSubComments($commentID, $userId = null){
+        return SubComments::where(['parent_comment_id' => $commentID])->get();
     }
 
     public static function limitContent(string $text, int $id)
