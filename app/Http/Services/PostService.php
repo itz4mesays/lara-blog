@@ -6,6 +6,7 @@ use App\Http\Repositories\PostRepository;
 use App\Models\Comments;
 use App\Models\Likes;
 use App\Models\Post;
+use App\Models\SubComments;
 
 class PostService implements PostRepository 
 {
@@ -87,7 +88,7 @@ class PostService implements PostRepository
                 'code' => 201,
                 'id' => $comment->id,
                 'username' => $comment->author->name,
-                'date_created' => date('d F, Y', strtotime($comment->created_at)),
+                'date_created' => date('d/m/Y', strtotime($comment->created_at)),
                 'message' => $request->message,
                 'msg' => 'Comment has been added successfully'
             ];
@@ -99,5 +100,30 @@ class PostService implements PostRepository
             ];
         }
         
+    }
+
+    public function addSubComment(object $request)
+    {
+        try {
+            //code...
+            $subcomment = new SubComments();
+            $subcomment->parent_comment_id = $request->parentid;
+            $subcomment->message = $request->message;
+            $subcomment->save();
+
+            return [
+                'code' => 201,
+                'id' => $subcomment->id,
+                'username' => $subcomment->author->name,
+                'date_created' => date('d/m/Y', strtotime($subcomment->created_at)),
+                'message' => $request->message,
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            return [
+                'code' => 500,
+                'message' => $th->__toString()
+            ];
+        }
     }
 }

@@ -30,6 +30,8 @@
                     </li>
                 @else
 
+                    <input type="hidden" name="uid" value="{{Auth::user()->id}}" id="uid">
+
                     @can('admin_menus')
                         
                         {{-- <li class="nav-item dropdown dropdown-animate" data-toggle="hover">

@@ -11,7 +11,8 @@ class Likes extends Model
 
     protected $fillable = [
         'likes',
-        'unlikes'
+        'unlikes',
+        'sub_comment_id'
     ];
 
     public static function boot(){

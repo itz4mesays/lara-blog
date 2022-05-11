@@ -54,6 +54,9 @@ class PostsController extends Controller
         return view('posts.edit')->with('post',$post);
     }
 
+    /**
+     * Update a single post
+     */
     public function update(Request $request, $id){
 
         $this->validate($request, [
@@ -158,7 +161,8 @@ class PostsController extends Controller
      * @return void
      */
     public function addChildComment(Request $request){
-
+        $result = $this->postService->addSubComment(($request));
+        return response()->json($result);
     }
 
     protected function getSinglePost($id){

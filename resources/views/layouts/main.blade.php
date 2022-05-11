@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{{ asset('css/quick-website.css') }} " id="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }} " id="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>
+
 </head>
 
 <body>

@@ -1,3 +1,7 @@
+@php
+    use App\Helpers\Utils;
+@endphp
+
 @extends('layouts.main')
 
 @section('title', 'All ')
@@ -24,9 +28,9 @@
                                 @endif
                             </div>
                             <div class="pl-4">
-                                <h5>{{$p->post_title}}</h5>
+                                <h5><a href="{{ route('blog.view', ['id' => $p->id]) }}" title="Click on the title to view post">{{$p->post_title}}</a></h5>
                                 <p>
-                                    {!! $p->body !!}
+                                    {!! Utils::limitContent($p->body, $p->id) !!}
                                 </p>
 
                                 <br/>

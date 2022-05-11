@@ -26,13 +26,9 @@
                             <p>
                                 {!! $post->body !!}
                             </p>
-
+                            <br/>
                             <p class="text-bold postColl" data-post="{{$post->id}}"> <em> {{ __('Created By')}}
-                                @if ($post->user_id == auth()->user()->id)
-                                    <span class="badge badge-success badge-pill">{{ __('self') }}</span>
-                                @else
                                 <span class="badge badge-success badge-pill"> {{ $post->user->name }}</span>
-                                @endif
                                 </em> </p>
                             <p class="text-bold"> <em>{{ __('Posted On')}}: {{ date('d/m/Y', strtotime($post->created_at)) }}</em> </p>
 
@@ -47,13 +43,10 @@
                                         <span class="badge badge-info"> {{$post->lcount ? $post->lcount->unlikes : 0}} </span> <i class="fa fa-thumbs-down" title="Dislike this"></i>
                                     </p>
 
-                                    <p class="btn btn-sm btn-default btn-hover-danger commentCount" data-comm="{{$post->id}}">
+                                    <p class="btn btn-sm btn-default btn-hover-danger" data-comm="{{$post->id}}">
                                         <span class="badge badge-secondary"> {{$post->comments ? count($post->comments) : 0}}  </span> <i class="fa fa-comment" title="Comments"></i>
                                     </p>
                                 </div>
-
-                                <a href="#" class="comment">Add Comment</a>
-
                             </div>
                         </div>
                     </div>
@@ -62,26 +55,29 @@
 
             </div>
 
-            <!-- Comment Section -->
-                <div class="commentSection">
-                    <div class="" id="addComment">
-                        {!! Form::open(['method' => 'POST', 'url' => route('user.post.comment', ['id' => $post->id]), 'id' => 'add-comment' ]) !!}
-                        <div class="form-group">
-                            {!! Form::textarea('message', null, ['class' => 'form-control', 'rows' => 2, 'id' => 'id_message', 'required' => true, 'placeholder' => 'Enter your comment here...']) !!}
-                            <div class="divider"></div>
-                            {!! Form::submit('Add Comment', ['class' => 'btn btn-primary btn-sm float-right', 'id' => 'submit-comment']) !!}
+            @if (Auth::check())
+                    <!-- Comment Section -->
+                    <div class="commentSection">
+                        <div class="" id="addComment">
+                            {!! Form::open(['method' => 'POST', 'url' => route('user.post.comment', ['id' => $post->id]), 'id' => 'add-comment' ]) !!}
+                            <div class="form-group">
+                                {!! Form::textarea('message', null, ['class' => 'form-control', 'rows' => 2, 'id' => 'id_message', 'required' => true, 'placeholder' => 'Enter your comment here...']) !!}
+                                <div class="divider"></div>
+                                {!! Form::submit('Add Comment', ['class' => 'btn btn-primary btn-sm float-right', 'id' => 'submit-comment']) !!}
 
-                            <div class="loading"></div>
+                                <div class="loading"></div>
 
+                            </div>
+                            {!! Form::close() !!}
                         </div>
-                        {!! Form::close() !!}
                     </div>
-                </div>
-            <!-- End Comment -->
+                <!-- End Comment -->
 
-            <br/>
+                <br/>
 
-            @include('posts._partials._comments', [$post])
+                @include('posts._partials._comments', [$post])
+            @endif
+            
 
         </div>
     </div>

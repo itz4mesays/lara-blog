@@ -55,7 +55,10 @@ Route::middleware(['auth'])->group(function (){
         Route::post('/posts/likes', [PostsController::class, 'likes'])->name('post.likes');
 
         //Comment Routes
-        Route::post('/posts/add-comment', [PostsController::class, 'addComment'])->name('post.comment');
-        Route::post('/post/{id}/comment/{id}/add-child-comment', [PostsController::class, 'addChildComment'])->name('post.add-comment');
+        Route::post('/posts/comment/add-comment', [PostsController::class, 'addComment'])->name('post.comment');
+        Route::post('/posts/comment/add-child-comment', [PostsController::class, 'addChildComment'])->name('post.add-comment');
     });
+
 });
+
+Route::get('/blog/view-single/{id}', [SiteController::class, 'viewSingle'])->name('blog.view');
